@@ -1,0 +1,12 @@
+CREATE:-:AutoLink.exe
+CREATE:-:BruteSSH.exe
+CREATE:-:DeepscanV1.exe
+CREATE:-:ServerProfiler.exe
+CREATE:-:FTPCrack.exe
+CREATE:-:relaySMTP.exe
+CREATE:-:DeepscanV2.exe
+CREATE:-:HTTPWorm.exe
+CREATE:-:SQLInject.exe
+CREATE:-:Formulas.exe
+NOTHING:-:NOTIFY
+SPAWN:-:daemon/post-augments-work.js

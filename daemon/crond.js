@@ -5,7 +5,6 @@ export const USED_CHANNELS = ["UPDATE_CONF"]
 
 var TIMINGS = 0
 var COUNTERS = []
-var COUNTERS_BASE = []
 
 function calcMcd(a, b) {
   if (b === 0) {
@@ -34,9 +33,8 @@ function calculateTimings(conf) {
 function calculateCounters(conf, timings) {
   for (let LINE of conf) {
     let DATA = LINE.replace("\r", "").split(":")
-    COUNTERS.push([Math.floor(Number(DATA[0]) / timings), DATA[1]])
+    COUNTERS.push([Math.floor(Number(DATA[0]) / timings), DATA[1], Math.floor(Number(DATA[0]) / timings)])
   }
-  COUNTERS_BASE = [...COUNTERS]
 }
 
 /** @param {NS} ns */
@@ -50,19 +48,24 @@ async function readConfig(ns, file) {
 /** @param {NS} ns */
 export async function main(ns) {
   const CONFIG_FILE = ns.args[0] || "configs/crontab.txt"
+  ns.disableLog("ALL")
   await readConfig(ns, CONFIG_FILE)
 
   while (true) {
     if (updateValueViaPortChannel(ns, USED_PORT, 1, null)) {
+      ns.print("DEBUG Forcing a config update...")
+      COUNTERS = []
       await readConfig(ns, CONFIG_FILE)
+      ns.print("DEBUG New config is " + COUNTERS)
     }
     clearPort(ns, USED_PORT)
     for (let i = 0; i < COUNTERS.length; i++) {
       let INSTRUCTION = COUNTERS[i]
       COUNTERS[i][0] = INSTRUCTION[0] - 1
-      if (INSTRUCTION[0] - 1 == 0) {
+      if (COUNTERS[i][0] == 0) {
+        ns.print("LOG Running " + INSTRUCTION[1])
         ns.run(INSTRUCTION[1])
-        COUNTERS[i][0] = COUNTERS_BASE[i][0]
+        COUNTERS[i][0] = COUNTERS[i][2]
       }
     }
 

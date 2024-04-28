@@ -1,6 +1,14 @@
 import { tryStartOnManager, pingNfty } from "/lib/_utils.js"
 import { generatePathRaw } from "/utils/l00k4theh111z.js"
 
+export function autocomplete(data, args) {
+  let queues = []
+  for (let txt of data.txts) {
+    if (txt.includes(".queue")) queues.push(txt)
+  } 
+  return [...queues]
+}
+
 function readFile(ns, file) {
   if (!ns.fileExists(file)) return undefined
   return ns.read(file).split("\n")

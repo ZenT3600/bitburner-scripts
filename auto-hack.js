@@ -4,6 +4,7 @@ import { scanTargetsUnfiltered } from "/lib/_utils.js"
 export async function main(ns) {
   const SCRIPT_WHITELIST = [
     ...ns.ls("home", "daemon/"),
+    ...ns.ls("home", "exploit/"),
     ns.getScriptName()
   ]
   const targets = scanTargetsUnfiltered(ns)
